@@ -19,5 +19,16 @@ export default new Router({
       name:'login',
       component: () => import('@/views/login/index'),
     },
+    {
+      path:'/storageLocation',
+      name:'storageLocation',
+      component: () => import('@/components/storageLocation'),
+    },
+    {
+      path:'/addLibrary',
+      name:'addLibrary',
+      component: () => import('@/components/addLibrary'),
+    },
+
   ]
 })
