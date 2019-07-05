@@ -14,15 +14,15 @@
        
         
         <el-table
-        :data="storageLocationData"
-        border
-        style="width: 100%">
+            :data="storageLocationData"
+            border
+            style="width: 100%">
         
              <el-table-column type="expand"  >
                 <el-table
-        :data="propsData"
-        border
-        style="width: 100%">
+                    :data="propsData"
+                    border
+                    style="width: 100%">
          
                         <el-table-column label="托数" prop="storageNum" >
                            
@@ -46,17 +46,17 @@
                            
                         </el-table-column>
                         
-        </el-table>
+                </el-table>
                 
              </el-table-column>
             <el-table-column
-            prop="storageLocationNumber"
-            label="库位号"
-            width="180" >
+                prop="storageLocationNumber"
+                label="库位号"
+                width="180" >
             </el-table-column>
             <el-table-column
-            prop="storageLocationNum"
-            label="托数">
+                prop="storageLocationNum"
+                label="托数">
             
             </el-table-column>
             <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">

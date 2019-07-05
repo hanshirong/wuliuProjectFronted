@@ -29,6 +29,22 @@ export default new Router({
       name:'addLibrary',
       component: () => import('@/components/addLibrary'),
     },
+    {
+      path:'/stockLibrary',
+      name:'stockLibrary',
+      component: () => import('@/components/StockLibrary'),
+    },
+    {
+      path:'/addStockItems',
+      name:'addStockItems',
+      component: () => import('@/components/addStockItems'),
+    },
+    {
+      path:'/stockinTable',
+      name:'stockinTable',
+      component: () => import('@/components/StockInTable'),
+    }
+    
 
   ]
 })

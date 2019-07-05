@@ -69,21 +69,6 @@ export default {
 </script>
 
 <style>
-.LibraryForm{
-    display: flex;
-    width: 50%;
-    justify-content: center;
-    border:3px solid black;
-    height: 600px;
-}
-.el-form-item{
-    margin:10px;
-    border:3px solid black;
-    width:50%;
-}
-.date{
-    height:100px;
-    width:100px;
-}
+
 </style>
 
