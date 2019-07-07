@@ -8,6 +8,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './icons'
 import Api from './api/index';
 import store from './store';
+import Blob from './excel/Blob.js'
+import Export2Excel from './excel/Export2Excel.js'
+
 Vue.use(ElementUI,{size:'small',zIndex:3000});
 
 Vue.config.productionTip = false
