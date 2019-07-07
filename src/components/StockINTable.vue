@@ -7,7 +7,7 @@
         <div class="driverTable">
             <el-table
                 :data="driverData"
-                border style="width: 50%">
+                border style="width: 100%">
                 <el-table-column 
                     prop="carNumber"
                     label="车次号"
@@ -33,7 +33,7 @@
         <div class="storeClerkTable">
             <el-table
                 :data="storeClerkData"
-                border width="50%">
+                border width="100%">
                <el-table-column 
                         prop="startTime"
                         label="卸货开始时间"

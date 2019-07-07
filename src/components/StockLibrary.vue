@@ -26,27 +26,30 @@
             :data="stocksBatch"
             border style="width: 100%">
             <el-table-column 
-                    prop="moveNumber"
+                    prop="mobileTicket"
                     label="移动单号号"
                     width="180" >
             </el-table-column>
             <el-table-column
-                    prop="moveDirection"
+                    prop="direction"
                     label="移动方向">
             </el-table-column>
             <el-table-column
-                    prop="moveDate"
-                    label="移动时间">            
+                    prop="datetime"
+                    label="移动时间"
+                    width="300">            
             </el-table-column>
             <el-table-column
-                    prop="carNumber"
-                    label="车次号">          
+                    prop="truckIndex"
+                    label="车次号"
+                    width="80">          
             </el-table-column>
             <el-table-column
-                    prop="status"
-                    label="状态">
+                    prop="status "
+                    label="状态"
+                    width="100">
             </el-table-column>
-            <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+            <el-table-column label="Actions" align="center" width="230" >
                     <template slot-scope="{row}">
                     <el-button type="primary" size="mini" @click="handleUpdate(row)">
                         Edit
@@ -60,25 +63,21 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
     data(){
         return{
             moveNumber:'',
             startDate:'',
             endDate:'',
+            
             stocksBatch:[{
-                moveNumber:'1p-yk-1999-0010',
-                moveDirection:'上海->杭州',
-                moveDate:'2019-07-05',
-                carNumber:'1',
-                status:'运输中'
-            },{
-                moveNumber:'1p-yk-1999-0011',
-                moveDirection:'上海->杭州',
-                moveDate:'2019-07-05',
-                carNumber:'2',
-                status:'未开始'
-            },],
+                mobileTicket:'',
+                direction:'',
+                datetime:'',
+                truckIndex:'',
+                status:'',
+            }],
             options:[{
                 value:'状态1',
                 label:'未开始'
@@ -101,9 +100,30 @@ export default {
 
         }
     },
+     mounted:function(){
+      let that = this;
+      console.log(that.$store.state.token);
+      axios({
+        method: "GET",
+        url: "api/api/v1/entry",
+        headers:{
+            authorization: "Bearer "+ that.$store.state.token
+        }
+     })
+      .then(function(response) {
+        console.log(response);
+        that.stocksBatch=response.data;//库位号以及托数
+      
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+},
     methods:{
+        
         addStockbatch(){
-           console.log("跳转到addLibrary.vue");
+            let that=this;
+           that.$router.push({ path: "/addLibrary" });
             
         }
     }

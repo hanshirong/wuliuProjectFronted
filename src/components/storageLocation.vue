@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        
+        <!--
         <div class="table-container">
              <el-input v-model="listQuery.number" placeholder="number" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
              <el-input v-model="listQuery.num" placeholder="num" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -10,15 +10,15 @@
              <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
                 Add
              </el-button>
-        </div>
+        </div>-->
        
         
         <el-table
             :data="storageLocationData"
             border
             style="width: 100%">
-        
-             <el-table-column type="expand"  >
+           
+             <el-table-column type="expand"  @click="handleUpdate(row)">
                 <el-table
                     :data="propsData"
                     border
@@ -27,35 +27,36 @@
                         <el-table-column label="托数" prop="storageNum" >
                            
                         </el-table-column>
-                        <el-table-column label="物料编号" prop="stockNumber">
+                        <el-table-column label="物料编号" prop="serial">
                             
                         </el-table-column>
-                        <el-table-column label="物品名称" prop="stockName" >
+                        <el-table-column label="物品名称" prop="name" >
                            
                         </el-table-column>
-                        <el-table-column label="核定数" prop="stockNum">
+                        <el-table-column label="核定数" prop="count">
                             
                         </el-table-column>
-                        <el-table-column label="入库时间" prop="date">
+                        <el-table-column label="入库时间" prop="entryAt">
                            
                         </el-table-column>
-                        <el-table-column label="移动单号" prop="moveNumber">
+                        <el-table-column label="移动单号" prop="mobileTicket">
                            
                         </el-table-column>
-                        <el-table-column label="移动方向" prop="moveDirection">
+                        <el-table-column label="移动方向" prop="direction">
                            
                         </el-table-column>
                         
                 </el-table>
                 
              </el-table-column>
+            <!--库位号托数表格-->
             <el-table-column
-                prop="storageLocationNumber"
+                prop="name"
                 label="库位号"
                 width="180" >
             </el-table-column>
             <el-table-column
-                prop="storageLocationNum"
+                prop="trayNum"
                 label="托数">
             
             </el-table-column>
@@ -75,6 +76,8 @@
     </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
     data(){
         return{
@@ -86,51 +89,40 @@ export default {
             },
             propsData:[{
                 storageNum:'1',
-                stockNumber:'001',
-                stockName:'螺丝刀',
-                stockNum:'20',
-                date:'2019-07-01',
-                moveNumber:'9988778822666',
-                moveDirection:'杭州->上海'
-            },
-            {
-                storageNum:'2',
-                stockNumber:'002',
-                stockName:'螺丝刀',
-                stockNum:'20',
-                date:'2019-07-01',
-                moveNumber:'9988778822666',
-                moveDirection:'杭州->上海'
+                serial:'',
+                name:'',
+                count:'',
+                entryAt:'',
+                mobileTicket:'',
+                direction:'',
+                
             },],
             storageLocationData: [{
-                storageLocationNumber:'A1-1',
-                storageLocationNum:'2',
-                storageNum:'1',
-                stockNumber:'001',
-                stockName:'螺丝刀',
-                stockNum:'20',
-                date:'2019-07-01',
-                moveNumber:'9988778822666',
-                moveDirection:'杭州->上海'
-            },{
-                storageLocationNumber:'A1-2',
-                storageLocationNum:'2',
-                storageNum:'1',
-                stockNumber:'001',
-                stockName:'螺丝刀',
-                stockNum:'20',
-                date:'2019-07-01',
-                moveNumber:'9988778822666',
-                moveDirection:'杭州->上海'
-            },{
-                storageLocationNumber:'A1-3',
-                storageLocationNum:'2'
-            },{
-                storageLocationNumber:'A2-1',
-                storageLocationNum:'2'
+                name:'',
+                trayNum:'',  
             }]
         }
     },
+    
+    mounted:function(){
+      let that = this;
+      console.log(that.$store.state.token);
+      axios({
+        method: "GET",
+        url: "api/api/v1/location",
+        headers:{
+            authorization: "Bearer "+ that.$store.state.token
+        }
+     })
+      .then(function(response) {
+        console.log(response.data);
+        that.storageLocationData=response.data;//库位号以及托数
+        
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+},
     methods:{
         handleChange(val) {
         console.log(val);
@@ -141,6 +133,26 @@ export default {
       handleCreate() {
        console.log('create');
     },
+    handleUpdate(row){
+         let that = this;
+        
+         axios({
+            method: "GET",
+            url: "api/api/v1/location/"+row.id,
+            headers:{
+                authorization: "Bearer "+ that.$store.state.token
+            },
+            
+         })
+      .then(function(response) {
+        console.log(response);
+       // that.propsData.entryAt=response.data.entryAt;//库位号以及托数
+        
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
     }
 }
 </script>
