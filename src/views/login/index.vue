@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" label-position="left">
             <div class="title-container">
                 <h3 class="title">Login Form</h3>
             </div>
@@ -12,7 +12,13 @@
                     ref="username"
                     v-model="loginForm.username"
                     placeholder="Username"
-                    ></el-input>
+                    name="username"
+                    type="text"
+                    tabindex="1"
+
+                    >
+                    
+                    </el-input>
             </el-form-item>
             <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
                 <el-form-item prop="password">
@@ -25,11 +31,13 @@
                         v-model="loginForm.password" 
                         :type="passwordType"
                         placeholder="Password"
+                        name="password"
+                        tabindex="2"
                         @keyup.native="checkCapslock"
                         @blur="capsTooltip=false"
                         @keyup.enter.native="handleLogin"
                         ></el-input>
-                    <span class="show-pwd" @click="showPwd">
+                    <span class="show-pwd" @click="showPwd" >
                         <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
                     </span>
                 </el-form-item>
@@ -131,7 +139,8 @@ import axios from "axios"
 
 
 .login-container {
-  min-height: 100%;
+ 
+  min-height: 100vh;
   width: 100%;
  
   overflow: hidden;
@@ -139,7 +148,7 @@ import axios from "axios"
 }
 
  .login-form {
-    position: relative;
+    
     width: 520px;
     max-width: 100%;
     padding: 160px 35px 0;
@@ -150,6 +159,7 @@ import axios from "axios"
   }
 
    .svg-container {
+    position: relative;
     padding: 6px 5px 6px 15px;
   
     vertical-align: middle;
@@ -173,7 +183,7 @@ import axios from "axios"
 
   .show-pwd {
     position: absolute;
-    right: 10px;
+   
     top: 7px;
     font-size: 16px;
  
@@ -181,10 +191,50 @@ import axios from "axios"
     user-select: none;
   }
 
-  
+.el-input{
+   
+    
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+}
+
+
 
 
 
 </style>
 
 
+
+
+<style >
+
+
+
+
+/* reset element-ui css */
+
+  
+
+
+
+input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+     
+      height: 47px;
+     
+
+}
+  .el-form-item {
+    
+   
+    border-radius: 5px;
+   
+  }
+
+</style>
