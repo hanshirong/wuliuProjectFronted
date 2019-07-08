@@ -13,7 +13,7 @@
                     :data="propsData"
                     border
                     style="width: 100%">
-         
+          
                         <el-table-column label="托数" prop="storageNum" >
                            
                         </el-table-column>

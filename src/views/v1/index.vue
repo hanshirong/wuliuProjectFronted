@@ -1,5 +1,5 @@
 <template>
-    <storageLocation></storageLocation>
+    <storageLocation> </storageLocation>
 </template>
 
 <script>
