@@ -136,7 +136,7 @@ import axios from "axios"
                          that.$store.dispatch("getNewAdmin",response.data.role); 
                         
                          if(that.$store.state.admin =='1')
-                             that.$router.push({ path: "/" });
+                             that.$router.push({ path: "/v1" });
                         //console.log(response);
                     // that.propsData.entryAt=response.data.entryAt;//库位号以及托数
                         

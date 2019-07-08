@@ -11,8 +11,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'login',
+      component: () => import('@/views/login/index'),
     },
     {
       path:'/login',
@@ -20,7 +20,7 @@ export default new Router({
       component: () => import('@/views/login/index'),
     },
     {
-      path:'/storageLocation',
+      path:'/v1',
       name:'storageLocation',
       component: () => import('@/components/storageLocation'),
     },

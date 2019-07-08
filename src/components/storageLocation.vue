@@ -1,16 +1,6 @@
 <template>
     <div class="app-container">
-        <!--
-        <div class="table-container">
-             <el-input v-model="listQuery.number" placeholder="number" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-             <el-input v-model="listQuery.num" placeholder="num" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-                Search
-             </el-button>
-             <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-                Add
-             </el-button>
-        </div>-->
+      
        
         
         <el-table
@@ -18,7 +8,7 @@
             border
             style="width: 100%">
            
-             <el-table-column type="expand"  @click="handleUpdate(row)">
+             <el-table-column type="expand"  @click="handleUpdate(row)"><!--怎么获取row呢-->
                 <el-table
                     :data="propsData"
                     border
@@ -62,7 +52,7 @@
             </el-table-column>
             <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
-                <el-button type="primary" size="mini" @click="handleUpdate(row)">
+                <el-button type="primary" size="mini">
                     Edit
                 </el-button>
                 <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(row,'deleted')">
@@ -82,11 +72,8 @@ export default {
     data(){
         return{
            
-            activeNames: ['1'],
-            listQuery:{
-               number:undefined,
-               num:undefined 
-            },
+            
+            
             propsData:[{
                 storageNum:'1',
                 serial:'',
@@ -146,11 +133,15 @@ export default {
          })
       .then(function(response) {
         console.log(response);
-       // that.propsData.entryAt=response.data.entryAt;//库位号以及托数
-        
+       
       })
       .catch(function(error) {
-        console.log(error);
+        //console.log(error.message);
+        alert(error);
+        if(error==="Error: Request failed with status code 401")
+           that.$router.push({ path: "/" });
+        
+
       });
     }
     }
