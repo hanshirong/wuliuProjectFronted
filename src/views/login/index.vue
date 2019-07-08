@@ -6,7 +6,7 @@
             </div>
             <el-form-item prop="username">
                 <span class="svg-container">
-                    <svg-icon icon-class="user" ></svg-icon>
+                     <img src="/static/images/user.png"/>
                 </span>
                 <el-input 
                     ref="username"
@@ -23,7 +23,8 @@
             <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
                 <el-form-item prop="password">
                     <span class="svg-container">
-                        <svg-icon icon-class="password" ></svg-icon>
+                        <img src="/static/images/password.png"/>
+                       
                     </span>
                     <el-input 
                         :key="passwordType"
@@ -38,11 +39,13 @@
                         @keyup.enter.native="handleLogin"
                         ></el-input>
                     <span class="show-pwd" @click="showPwd" >
-                        <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                         <img v-if="passwordType === 'password' " src="/static/images/eye.png"/>
+                         <img v-if="passwordType != 'password' " src="/static/images/eye-open.png"/>
+                       
                     </span>
                 </el-form-item>
             </el-tooltip>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-top:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
         </el-form>
     </div>
@@ -121,7 +124,25 @@ import axios from "axios"
             .then(function(response) {
                
                 that.$store.dispatch("getNewToken",response.data.token); 
-                 console.log(that.$store.state.token);  
+                 axios({
+                        method: "GET",
+                        url: "api/api/v1/auth/me",
+                        headers:{
+                            authorization: "Bearer "+ that.$store.state.token
+                        },
+                        
+                    })
+                    .then(function(response) {
+                         that.$store.dispatch("getNewAdmin",response.data.admin); 
+                         if(that.$store.state.admin ==='1')
+                             that.$router.push({ path: "/" });
+                        //console.log(response);
+                    // that.propsData.entryAt=response.data.entryAt;//库位号以及托数
+                        
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
                 
 
             })
@@ -186,7 +207,7 @@ import axios from "axios"
 
   .show-pwd {
     position: absolute;
-    right:-5px;
+    right:-10px;
     top: 7px;
     font-size: 16px;
  
@@ -196,10 +217,15 @@ import axios from "axios"
 
 .el-input{
    
-    
+    border:1px solid black;
     display: inline-block;
-    height: 47px;
+    height: 100%;
     width: 85%;
+}
+.el-input--small .el-input__inner {
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
 }
 
 
@@ -229,7 +255,8 @@ input {
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
      
-      height: 47px;
+      height: 80px;
+     
      
 
 }
