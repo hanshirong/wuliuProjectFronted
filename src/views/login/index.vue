@@ -121,10 +121,13 @@ import axios from "axios"
             .then(function(response) {
                
                 that.$store.dispatch("getNewToken",response.data.token); 
-                 console.log(that.$store.state.token);      
+                 console.log(that.$store.state.token);  
+                
+
             })
             .catch(function(error) {
                 console.log(error);
+                alert(error);
             });
       
             }
