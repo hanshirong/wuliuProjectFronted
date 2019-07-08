@@ -1,12 +1,12 @@
 <template>
     <div class="login-container">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
             <div class="title-container">
                 <h3 class="title">Login Form</h3>
             </div>
             <el-form-item prop="username">
                 <span class="svg-container">
-                    <svg-icon icon-class="user" />
+                    <svg-icon icon-class="user" ></svg-icon>
                 </span>
                 <el-input 
                     ref="username"
@@ -17,7 +17,7 @@
             <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
                 <el-form-item prop="password">
                     <span class="svg-container">
-                        <svg-icon icon-class="password" />
+                        <svg-icon icon-class="password" ></svg-icon>
                     </span>
                     <el-input 
                         :key="passwordType"
@@ -125,4 +125,66 @@ import axios from "axios"
     }
   
 </script>
+
+
+<style >
+
+
+.login-container {
+  min-height: 100%;
+  width: 100%;
+ 
+  overflow: hidden;
+
+}
+
+ .login-form {
+    position: relative;
+    width: 520px;
+    max-width: 100%;
+    padding: 160px 35px 0;
+    margin: 0 auto;
+    overflow: hidden;
+   
+
+  }
+
+   .svg-container {
+    padding: 6px 5px 6px 15px;
+  
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+  }
+
+  
+  .title-container {
+    position: relative;
+
+   
+  }
+   .title {
+      font-size: 26px;
+    
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+ 
+    cursor: pointer;
+    user-select: none;
+  }
+
+  
+
+
+
+</style>
+
 
