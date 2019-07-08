@@ -133,8 +133,9 @@ import axios from "axios"
                         
                     })
                     .then(function(response) {
-                         that.$store.dispatch("getNewAdmin",response.data.admin); 
-                         if(that.$store.state.admin ==='1')
+                         that.$store.dispatch("getNewAdmin",response.data.role); 
+                        
+                         if(that.$store.state.admin =='1')
                              that.$router.push({ path: "/" });
                         //console.log(response);
                     // that.propsData.entryAt=response.data.entryAt;//库位号以及托数
