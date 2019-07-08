@@ -183,7 +183,7 @@ import axios from "axios"
 
   .show-pwd {
     position: absolute;
-   
+    right:-5px;
     top: 7px;
     font-size: 16px;
  
