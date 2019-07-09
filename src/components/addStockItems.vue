@@ -2,16 +2,16 @@
 <div>
     
    <form
-            name="imgForm"
-            id="imgForm"
+            name="excelForm"
+            id="excelForm"
             enctype="multipart/form-data"
-            action="图片上传接口"
+            action="表格上传接口"
             method="post"
           >
             <input
-              class="input-loc-img"
-              name="imgLocal"
-              id="imgLocal"
+              class="input-loc-excel"
+              name="excelLocal"
+              id="excelLocal"
               type="file"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               @change="importData"
@@ -39,9 +39,9 @@ export default {
       let that = this;
       console.log(e);
         
-      let imgFile = e.target.files[0]; //取到上传的图片
+      let excelFile = e.target.files[0]; //取到上传的图片
       let formData = new FormData(); //通过formdata上传
-      formData.append("items", imgFile);
+      formData.append("items", excelFile);
       axios({
         method: "POST",
         url: "api/api/v1/entry/" + '5d1c1acb510cbf6c7c7e0818'+'/items',

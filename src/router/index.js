@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+
 
 
 Vue.use(Router)
@@ -12,37 +12,42 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      component: () => import('@/views/login/index'),
+      component: () => import('@/components/login'),//Login
     },
     {
       path:'/login',
       name:'login',
-      component: () => import('@/views/login/index'),
+      component: () => import('@/components/login'),//Login
     },
     {
       path:'/v1',
       name:'storageLocation',
-      component: () => import('@/components/storageLocation'),
+      component: () => import('@/components/storageLocation'),//管理员库位管理
     },
     {
       path:'/addLibrary',
       name:'addLibrary',
-      component: () => import('@/components/addLibrary'),
+      component: () => import('@/components/addLibrary'),//单证员添加入库批次，做成弹窗的形式填写
     },
     {
-      path:'/stockLibrary',
+      path:'/entry',
       name:'stockLibrary',
-      component: () => import('@/components/StockLibrary'),
+      component: () => import('@/components/StockLibrary'),//单证员所有入库批次表
     },
     {
       path:'/addStockItems',
       name:'addStockItems',
-      component: () => import('@/components/addStockItems'),
+      component: () => import('@/components/addStockItems'),//单证员导入excel
     },
     {
       path:'/stockinTable',
       name:'stockinTable',
-      component: () => import('@/components/StockInTable'),
+      component: () => import('@/components/StockInTable'),//单证员点击入库批次进入入库单
+    },
+    {
+      path:'/stockinTable/:id',
+      name:'stockinTable',
+      component: () => import('@/components/StockInTable'),//单证员点击入库批次进入入库单
     }
     
 

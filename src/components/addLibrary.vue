@@ -4,9 +4,7 @@
     <div style="padding:30px;background-color: #e5f2ff;border-radius:10px">
   
     <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-       <el-form-item label="添加入库批次">
-       
-      </el-form-item>
+      
 
       <el-form-item label="车次号" prop="truckIndex" >
         <el-input ref="truckIndex" v-model="form.truckIndex" />
@@ -97,6 +95,7 @@ export default {
             })
             .then(function(response) {
                console.log(response);
+               that.form='';
                 //that.$store.dispatch("getNewToken",response.data.token); 
                  //console.log(that.$store.state.token);      
             })

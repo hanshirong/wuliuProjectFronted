@@ -1,16 +1,21 @@
 <template>
     <div class="app-container">
       
-       
+       <h2>库位管理</h2>
         
         <el-table
             :data="storageLocationData"
-            border
-            style="width: 100%">
-           
-             <el-table-column type="expand"  @click="handleUpdate(row)"><!--怎么获取row呢-->
+          
+            border style="width: 100%; "
+            
+            >
+            
+             <el-table-column  type="expand"  >
+             <template slot-scope="row">
+                 
                 <el-table
                     :data="propsData"
+                    
                     border
                     style="width: 100%">
           
@@ -37,8 +42,9 @@
                         </el-table-column>
                         
                 </el-table>
-                
-             </el-table-column>
+               
+             </template>
+            </el-table-column>
             <!--库位号托数表格-->
             <el-table-column
                 prop="name"
@@ -73,9 +79,9 @@ export default {
         return{
            
             
-            
+            storageNum:'',
             propsData:[{
-                storageNum:'1',
+                storageNum:'',
                 serial:'',
                 name:'',
                 count:'',
@@ -122,10 +128,20 @@ export default {
     },
     handleUpdate(row){
          let that = this;
+         console.log(row);
+        
+         for (var i = 0; i<row.trayNum; i=i+1) { 
+               that.propsData[i]=i+1;
+              
+               
+            }
+        
+            
+        
         
          axios({
             method: "GET",
-            url: "api/api/v1/location/"+row.id,
+            url: "api/api/v1/location/"+that.storageLocationData[row].id,
             headers:{
                 authorization: "Bearer "+ that.$store.state.token
             },
@@ -133,6 +149,10 @@ export default {
          })
       .then(function(response) {
         console.log(response);
+        if(response.data.trays !=null){
+            that.propsData=response.data.trays.items;
+        }
+            
        
       })
       .catch(function(error) {
@@ -148,7 +168,20 @@ export default {
 }
 </script>
 <style>
+.app-container{
+    display: flex;
+    margin-top:30px;
+    margin-left:80px;
+    margin-right: 80px;
+    flex-direction: column;
 
+}
+.el-table{
+    
+}
+.el-table-column{
+   
+}
 </style>
 
 
