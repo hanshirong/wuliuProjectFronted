@@ -2,21 +2,65 @@
   <div>
     <p class="error">{{ error }}</p>
 
-    <p class="decode-result">解析前: <b>{{ result }}</b></p>
+    <el-table
+      :data="parsing"
+      border style="width:100%;margin:50px;"
+      >
+        <el-table-column
+              prop="serial"
+              label="物料编号"
+              width="180">
+      </el-table-column>
+      <el-table-column
+              prop="ticket"
+              label="现品票号"
+              width="180">
+      </el-table-column>
+      <el-table-column
+              prop="count"
+              label="数量">
+      </el-table-column>
+
+    </el-table>
     <p class="decode-result">解析后: <b>{{ parsing }}</b></p>
+    <el-button @click="addDialog=true" v-if="this.$store.state.admin==3">ADD</el-button>
+                        <el-dialog
+                            title="添加"
+                            :visible.sync="addDialog"
+                            width="30%">
+                          <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
+                            <el-form-item label="物料编号" prop="serial" >
+                              <el-input ref="serial" v-model="form.serial" />
+                            </el-form-item>
+                             <el-form-item label="现品票号" prop="ticket" >
+                                <el-input ref="ticket" v-model="form.ticket" />
+                              </el-form-item>
+                               <el-form-item label="数量" prop="count" >
+                                <el-input ref="count" v-model="form.count" />
+                              </el-form-item>
+                          </el-form>
+                           
+                        </el-dialog>
     <qrcode-stream @decode="onDecode" @init="onInit" />
+    <button>提交</button>
   </div>
 </template>
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader'
-
+import axios from 'axios'
 export default {
 
   components: { QrcodeStream },
 
   data () {
     return {
+      addDialog:false,
+      form:{
+          serial:'',
+          ticket:'',
+          count:''
+      },
       result: '',
       parsing:{},
       error: ''
@@ -24,6 +68,33 @@ export default {
   },
 
   methods: {
+    update(){
+        let that = this;
+   
+     that.id = that.$route.params.id;
+
+     console.log(that.id);
+      axios({
+        method: "POST",
+        url: "api/entry/"+that.id+"/items/confirm",
+        headers:{
+            authorization: "Bearer "+ that.$store.state.token
+        },
+        data:{
+
+        },
+     })
+     .then(function(response){
+       alert("添加成功");
+     })
+      axios({
+        method: "GET",
+        url: "api/api/v1/entry/"+that.id,
+        headers:{
+            authorization: "Bearer "+ that.$store.state.token
+        }
+     })
+    },
     onDecode (result) {
       this.result = result
       var strs = new Array(); //定义一数组

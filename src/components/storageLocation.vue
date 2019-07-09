@@ -114,6 +114,8 @@ export default {
       })
       .catch(function(error) {
         console.log(error);
+         if(error==="Error: Request failed with status code 401")
+           that.$router.push({ path: "/" });
       });
 },
     methods:{

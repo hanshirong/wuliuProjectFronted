@@ -20,7 +20,7 @@ export default new Router({
       component: () => import('@/components/login'),//Login
     },
     {
-      path:'/v1',
+      path:'/location',
       name:'storageLocation',
       component: () => import('@/components/storageLocation'),//管理员库位管理
     },
@@ -39,15 +39,16 @@ export default new Router({
       name:'addStockItems',
       component: () => import('@/components/addStockItems'),//单证员导入excel
     },
+   
     {
-      path:'/stockinTable',
+      path:'/items/:id',
       name:'stockinTable',
       component: () => import('@/components/StockInTable'),//单证员点击入库批次进入入库单
     },
     {
-      path:'/stockinTable/:id',
-      name:'stockinTable',
-      component: () => import('@/components/StockInTable'),//单证员点击入库批次进入入库单
+      path:'/items/scan',
+      name:'scanQrCode',
+      component: () => import('@/components/scanQrCode'),//单证员点击入库批次进入入库单
     }
     
 
