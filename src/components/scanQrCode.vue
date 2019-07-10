@@ -22,9 +22,9 @@
       </el-table-column>
 
     </el-table>
-    <p class="decode-result">解析后: <b>{{ parsing }}</b></p>
+   
     <!--ADD-->
-    <el-button @click="addDialog=true" v-if="this.$store.state.admin==3">ADD</el-button>
+    <el-button @click="addDialog=true" >ADD</el-button>
                         <el-dialog
                             title="添加"
                             :visible.sync="addDialog"
@@ -43,7 +43,7 @@
                            <el-button @click="submit">确定</el-button>
                         </el-dialog>
     <qrcode-stream @decode="onDecode" @init="onInit" />
-    <button>提交</button>
+    <button @click="update">提交</button>
   </div>
 </template>
 
@@ -81,13 +81,17 @@ export default {
 
   methods: {
     submit(){
-      
-      this.scanData[this.i].ticket=this.form.ticket;
-      this.scanData[this.i].serial=this.form.serial;
-      this.scanData[this.i].count=this.form.count;
-      
+      this.$set(this.scanData,this.i,{ticket:this.form.ticket,serial:this.form.serial,count:this.form.count});
+     
+     
       this.i=this.i+1;
-      
+
+    },
+
+    mounted:function(){
+      console.log('yyy');
+      if(this.$store.state.token=="")
+        this.$router.push({path:'/'});
     },
     update(){
         let that = this;
@@ -101,6 +105,11 @@ export default {
         headers:{
             authorization: "Bearer "+ that.$store.state.token
         },
+        data:{
+          items:that.scanData
+        }
+
+          
        
      })
      .then(function(response){
@@ -121,10 +130,11 @@ export default {
       
     
     // this.parsing.count=parseInt(count);
-     this.scanData[this.i].ticket=strs[0]+'-'+strs[1].substring(0,2);
-     this.scanData[this.i].serial=strs[1].substring(2);
-     this.scanData[this.i].count=strs[2];
-     this.i=this.i+1;
+    
+      this.$set(this.scanData,this.i,{ticket:strs[0]+'-'+strs[1].substring(0,2),serial:strs[1].substring(2),count:parseInt(strs[2])});
+     
+     
+      this.i=this.i+1;
      
       console.log(this.i);
       

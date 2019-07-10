@@ -134,22 +134,13 @@ export default {
     },
     handleUpdate(row){
          let that = this;
-       
+         console.log(row.trayNum);
         for(var i=0;i<row.trayNum;i=i+1){
-            that.$set(that.propsData,i,{
-                Num:"托"+i,
-                serial:'',
-                name:'',
-                count:'',
-                entryAt:'',
-                mobileTicket:'',
-                direction:'',});
+            that.$set(that.propsData,i,{ Num:"托"+i,});
         }
+        
       
-       console.log("长度"+that.propsData.length);
-       for(var i=0;i<that.propsData.length;i++){
-           console.log("托"+that.propsData[i].Num);
-       }
+       
        
             
         
