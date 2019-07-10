@@ -84,7 +84,7 @@ export default {
       console.log(that.id);
       axios({
         method: "POST",
-        url: "api/entry/" + that.id + "/items/confirm",
+        url: "api/api/entry/" + that.id + "/items/confirm",
         headers: {
           authorization: "Bearer " + that.$store.state.token
         },
