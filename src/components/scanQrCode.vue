@@ -81,6 +81,7 @@ export default {
 
   methods: {
     submit(){
+      this.$set(this.scanData,this.i,)
       this.scanData[this.i].ticket=this.form.ticket;
       this.scanData[this.i].serial=this.form.serial;
       this.scanData[this.i].count=this.form.count;
