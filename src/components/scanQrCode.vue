@@ -81,12 +81,13 @@ export default {
 
   methods: {
     submit(){
-      this.scanData.splice(this.i+1);
+      
       this.scanData[this.i].ticket=this.form.ticket;
       this.scanData[this.i].serial=this.form.serial;
       this.scanData[this.i].count=this.form.count;
       
       this.i=this.i+1;
+      
     },
     update(){
         let that = this;

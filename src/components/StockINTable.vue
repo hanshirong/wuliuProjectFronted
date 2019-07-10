@@ -209,7 +209,7 @@ export default {
     mounted:function(){
       let that = this;
       that.stocks();
-},
+    },
 
 
     methods:{
