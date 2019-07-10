@@ -57,7 +57,8 @@
         </div>
         <div class="storeClerkTable" v-if="this.$store.state.admin==3">
           <p>仓管信息</p>
-           <span>卸货开始时间 <el-button @click="unloadDialog=true" v-if="this.$store.state.admin==3">卸货开始</el-button>
+           <span>卸货开始时间 <el-button @click="unloadDialog=true"  v-if="this.start==1">卸货开始</el-button>
+           <span v-if="this.start==0">{{this.storeClerkData[0].unloadAt}}</span>
                         <el-dialog
                             title="确认卸货开始？"
                             :visible.sync="unloadDialog"
@@ -68,7 +69,8 @@
                             <el-button type="primary" @click="unloadComfirm">确 定</el-button>
                         </el-dialog> 
             </span>
-            <span>卸货完成时间 <el-button @click="finishDialog=true" v-if="this.$store.state.admin==3">卸货完成</el-button>
+            <span>卸货完成时间 <el-button @click="finishDialog=true" v-if="this.end==1">卸货完成</el-button>
+             <span v-if="this.end==0">{{this.storeClerkData[0].finishAt}}</span>
                         <el-dialog
                             title="确认卸货完成？"
                             :visible.sync="finishDialog"
@@ -82,7 +84,18 @@
         <!--添加入库条目-->
         <div class="stocks" >
             <p @click="dialogFormVisible=true" v-if="this.$store.state.admin==2">添加入库条目 <img src="/static/images/pen.png"></p>
-             <p v-if="this.$store.state.admin==3">入库条目<button @click="scan()">扫描</button></p>
+             <span v-if="this.$store.state.admin==3">入库条目<button @click="scan()">扫描</button></span>
+             <span v-if="this.$store.state.admin==3"><button @click="allotDialog=true">分配库位</button>
+               <el-dialog
+                            title="确认分配库位？"
+                            :visible.sync="allotDialog"
+                            width="30%">
+                          
+                            <el-button @click="allotComfirm()">确定</el-button>
+                            <el-button @click="allotDialog=false">取消</el-button>
+                        </el-dialog>
+             </span>
+
             <el-dialog title="添加入库条目" :visible.sync="dialogFormVisible">
                  <form
                       name="excelForm"
@@ -158,11 +171,14 @@ import axios from 'axios';
 export default {
     data(){
         return{
+            start:0,
+            end:0,
             id:'',
             file:'',
             finishDialog:false,
             unloadDialog:false,
             dialogFormVisible:false,
+            allotDialog:false,
             createdAt:'',
             mobileTicket:'',
             direction:'',
@@ -192,52 +208,19 @@ export default {
 
     mounted:function(){
       let that = this;
-     that.id = that.$route.params.id;
-
-     console.log(that.id);
-      axios({
-        method: "GET",
-        url: "api/api/v1/entry/"+that.id,
-        headers:{
-            authorization: "Bearer "+ that.$store.state.token
-        }
-     })
-      .then(function(response) {
-        console.log(response.data);
-        that.createdAt=response.data.createdAt;
-        that.mobileTicket=response.data.mobileTicket;
-        that.direction=response.data.direction;
-        that.datetime=response.data.datetime;
-        that.driverData[0].truckIndex=response.data.truckIndex;
-        that.driverData[0].truckNum=response.data.truckNum;
-        that.driverData[0].truckModel=response.data.truckModel;
-        that.driverData[0].truckNo=response.data.truckNo;
-        that.storeClerkData[0].unloadAt=response.data.unloadAt;
-        that.storeClerkData[0].finishAt=response.data.finishAt;
-        that.stocksData=response.data.items;
-        
-      })
-      .catch(function(error) {
-        
-         alert(error);
-        if(error =="Error: Request failed with status code 401")
-           that.$router.push({ path: "/" });
-        
-      });
+      that.stocks();
 },
 
 
-
-
-
-
     methods:{
+      //扫描
           scan(){
             console.log('scan');
             
             this.$router.push({path:"/scan/"+this.id});
           },
-         importData(e){
+      //上传入库条目
+          importData(e){
               e.preventDefault();
               let that = this;
               let excelFile = e.target.files[0]; //取到上传的文件
@@ -268,19 +251,7 @@ export default {
                     }
                   })
                   .then(function(response) {
-                    console.log(response.data);
-                    that.createdAt=response.data.createdAt;
-                    that.mobileTicket=response.data.mobileTicket;
-                    that.direction=response.data.direction;
-                    that.datetime=response.data.datetime;
-                    that.driverData[0].truckIndex=response.data.truckIndex;
-                    that.driverData[0].truckNum=response.data.truckNum;
-                    that.driverData[0].truckModel=response.data.truckModel;
-                    that.driverData[0].truckNo=response.data.truckNo;
-                    that.storeClerkData[0].unloadAt=response.data.unloadAt;
-                    that.storeClerkData[0].finishAt=response.data.finishAt;
-                    that.stocksData=response.data.items;
-                    
+                    console.log(response.data);                  
                   })
                   .catch(function(error) {
                     
@@ -295,62 +266,147 @@ export default {
                 .catch(function(error) {
                   alert("添加失败");
                 })   
-         },
-         unloadComfirm(){
-        let that=this;
+            },
+      //卸货开始
+          unloadComfirm(){
+                    let that=this;
 
-      axios({
-        method: "PUT",
-        url: "api/api/v1/entry/" + that.id+'/status',
-        data:{
-            status:4
-        },
-        headers: {
+                  axios({
+                    method: "PUT",
+                    url: "api/api/v1/entry/" + that.id+'/status',
+                    data:{
+                        status:4
+                    },
+                    headers: {
+                      
+                      authorization: "Bearer "+ that.$store.state.token
+                    }
+                  })
+                  .then(function(response){
+                      console.log(response);
+
+
+                      that.unloadDialog=false;
+                      that.stocks();
+                  })
+                  .catch(function(error){
+                    that.unloadDialog=false
+                  })  
+              },
           
-           authorization: "Bearer "+ that.$store.state.token
-        }
-      })
-      .then(function(response){
-          console.log(response);
-
-        that.unloadDialog=false
-      })
-      .catch(function(error){
-        that.unloadDialog=false
-      })  
-    },
-      finishComfirm(){
-        let that=this;
-      axios({
-        method: "PUT",
-        url: "api/api/v1/entry/" + that.id+'/status',
-        data:{
-            status:5
-        },
-        headers: {
           
-           authorization: "Bearer "+ that.$store.state.token
-        }
-      })
-      .then(function(response){
-        that.finishDialog=false
-      })
-      .catch(function(error){
-        that.finishDialog=false
-         alert(error);
-        if(error =="Error: Request failed with status code 401")
-           that.$router.push({ path: "/" });
-        
-      })  
-    },
-    cancel(){
-        that.unloadDialog=false
-        that.finishDialog=false
-    }
+          
+      //卸货完成
+          finishComfirm(){
+                  let that=this;
+                  axios({
+                    method: "PUT",
+                    url: "api/api/v1/entry/" + that.id+'/status',
+                    data:{
+                        status:5
+                    },
+                    headers: {
+                      
+                      authorization: "Bearer "+ that.$store.state.token
+                    }
+                  })
+                  .then(function(response){
+                    console.log("finish");
 
-        
-             
-    },
+                    that.finishDialog=false;
+                    that.stocks();
+                  })
+                  .catch(function(error){
+                    that.finishDialog=false
+                    alert(error);
+                    if(error =="Error: Request failed with status code 401")
+                      that.$router.push({ path: "/" });
+                    
+                  })  
+        },
+      //全部信息
+          stocks(){
+            let that = this;
+            that.id = that.$route.params.id;
+            console.log(that.id);
+            axios({
+              method: "GET",
+              url: "api/api/v1/entry/"+that.id,
+              headers:{
+                  authorization: "Bearer "+ that.$store.state.token
+              }
+              })
+            .then(function(response) {
+                  console.log(response.data);
+                  that.createdAt=response.data.createdAt;
+                  that.mobileTicket=response.data.mobileTicket;
+                  that.direction=response.data.direction;
+                  that.datetime=response.data.datetime;
+                  that.driverData[0].truckIndex=response.data.truckIndex;
+                  that.driverData[0].truckNum=response.data.truckNum;
+                  that.driverData[0].truckModel=response.data.truckModel;
+                  that.driverData[0].truckNo=response.data.truckNo;
+                  that.storeClerkData[0].unloadAt=response.data.unloadAt;
+                  that.storeClerkData[0].finishAt=response.data.finishAt;
+                  that.stocksData=response.data.items;
+                  if(response.data.unloadAt==null)
+                    that.start=1;
+                  if(response.data.finishAt==null)
+                     that.end=1;
+                  for(var i=0;i<that.stocksData.length;i++){
+                    if(that.stocksData[i].status == 1){
+                      that.stocksData[i].status=""
+                    } else if(that.stocksData[i].status == 2){
+                      that.stocksData[i].status="已扫描"
+                    }else if(that.stocksData[i].status == 3){
+                      that.stocksData[i].status="已入库"
+                    }else if(that.stocksData[i].status == 4){
+                      that.stocksData[i].status="不存在"
+                    }
+                  }
+
+                  
+              
+                })
+                .catch(function(error) {
+                  
+                  alert(error);
+                  if(error =="Error: Request failed with status code 401")
+                    that.$router.push({ path: "/" });
+                  
+                })
+            },
+      //分配库位
+          allotComfirm(){
+            var that=this;
+            that.id = that.$route.params.id;
+            axios({
+                    method: "POST",
+                    url: "api/api/v1/entry/" + that.id+'/allot',
+                    
+                    headers: {
+                      
+                      authorization: "Bearer "+ that.$store.state.token
+                    }
+                  })
+                  .then(function(response){
+                    console.log("allotfinish");
+                    alert("分配完成");
+                    that.allotDialog=false;
+                    that.stocks();
+                  })
+                  .catch(function(error){
+                    that.allotDialog=false
+                    alert(error);
+                    if(error =="Error: Request failed with status code 401")
+                      that.$router.push({ path: "/" });
+                    
+                  })  
+          }
+      },
+     
+
+         
     
     }
 
