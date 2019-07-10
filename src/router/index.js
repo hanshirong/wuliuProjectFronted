@@ -48,7 +48,12 @@ export default new Router({
     {
       path:'/items/scan',
       name:'scanQrCode',
-      component: () => import('@/components/scanQrCode'),//单证员点击入库批次进入入库单
+      component: () => import('@/components/scanQrCode'),//单证员点击入库单扫描
+    },
+    {
+      path:'/scan/:id',
+      name:'scanQrCode',
+      component: () => import('@/components/scanQrCode'),//单证员点击入库单扫描
     }
     
 

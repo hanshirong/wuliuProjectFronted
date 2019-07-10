@@ -3,7 +3,7 @@
     <p class="error">{{ error }}</p>
 
     <el-table
-      :data="parsing"
+      :data="scanData"
       border style="width:100%;margin:50px;"
       >
         <el-table-column
@@ -23,12 +23,13 @@
 
     </el-table>
     <p class="decode-result">解析后: <b>{{ parsing }}</b></p>
+    <!--ADD-->
     <el-button @click="addDialog=true" v-if="this.$store.state.admin==3">ADD</el-button>
                         <el-dialog
                             title="添加"
                             :visible.sync="addDialog"
                             width="30%">
-                          <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
+                          <el-form ref="form" :model="form"  label-width="120px">
                             <el-form-item label="物料编号" prop="serial" >
                               <el-input ref="serial" v-model="form.serial" />
                             </el-form-item>
@@ -39,7 +40,7 @@
                                 <el-input ref="count" v-model="form.count" />
                               </el-form-item>
                           </el-form>
-                           
+                           <el-button @click="submit">确定</el-button>
                         </el-dialog>
     <qrcode-stream @decode="onDecode" @init="onInit" />
     <button>提交</button>
@@ -62,12 +63,30 @@ export default {
           count:''
       },
       result: '',
-      parsing:{},
-      error: ''
+      parsing:{},//[{
+       // serial:'',
+       // ticket:'',
+        //count:'',
+      //}],
+      error: '',
+      scanData:[{
+            serial:'',
+        ticket:'',
+        count:'',
+      }],
+      i:0,
+      
     }
   },
 
   methods: {
+    submit(){
+      this.scanData[this.i].ticket=this.form.ticket;
+      this.scanData[this.i].serial=this.form.serial;
+      this.scanData[this.i].count=this.form.count;
+      
+      this.i=this.i+1;
+    },
     update(){
         let that = this;
    
@@ -80,9 +99,7 @@ export default {
         headers:{
             authorization: "Bearer "+ that.$store.state.token
         },
-        data:{
-
-        },
+       
      })
      .then(function(response){
        alert("添加成功");
@@ -99,13 +116,15 @@ export default {
       this.result = result
       var strs = new Array(); //定义一数组
       strs = result.trim().split(/\s+/) //字符分割 
-      let ticket=strs[0]+'-'+strs[1].substring(0,2)
-      let serial=strs[1].substring(2)
-      let count=strs[2]
-     this.parsing.ticket=ticket
-     this.parsing.serial=serial
-     this.parsing.count=parseInt(count)
-
+      
+    
+    // this.parsing.count=parseInt(count);
+     this.scanData[this.i].ticket=strs[0]+'-'+strs[1].substring(0,2);
+     this.scanData[this.i].serial=strs[1].substring(2);
+     this.scanData[this.i].count=strs[2];
+     this.i=this.i+1;
+     
+      console.log(this.i);
       
     },
 

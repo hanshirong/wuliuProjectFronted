@@ -235,7 +235,7 @@ export default {
           scan(){
             console.log('scan');
             
-            this.$router.push({path:"/items/scan"});
+            this.$router.push({path:"/scan/"+this.id});
           },
          importData(e){
               e.preventDefault();
