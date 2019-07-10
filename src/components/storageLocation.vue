@@ -127,7 +127,7 @@ export default {
             that.$set(that.propsData[index],i-1,{ Num:"托"+i,});
         }
          console.log(that.propsData[index]);
-        /*
+        
       axios({
         method: "GET",
         url: "api/api/v1/location/" + row.id,
@@ -138,13 +138,13 @@ export default {
         .then(function(response) {
           console.log(response);
 
-          that.propsData = response.data.packs;
+          that.propsData[index] = response.data.packs;
         })
         .catch(function(error) {
           alert(error);
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
-        });*/
+        });
     },
     tableRowClassName ({row, rowIndex}) {
        //获取每行索引
