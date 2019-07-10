@@ -25,7 +25,7 @@
                     添加入库批次
                 </el-button>
                 <el-dialog title="添加入库批次" :visible.sync="dialogFormVisible">
-                    <el-form ref="form" v-model="form" :rules="formRules" label-width="120px">
+                    <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
                        
 
                         <el-form-item label="车次号" prop="truckIndex" >

@@ -62,10 +62,11 @@
                             title="确认卸货开始？"
                             :visible.sync="unloadDialog"
                             width="30%">
-                          
-                            <el-button @click="unloadComfirm()">确定</el-button>
-                            <el-button @click="cancle()">取消</el-button>
-                        </el-dialog>
+                           
+                         
+                            <el-button  @click="unloadDialog = false">取消</el-button>                      
+                            <el-button type="primary" @click="unloadComfirm">确 定</el-button>
+                        </el-dialog> 
             </span>
             <span>卸货完成时间 <el-button @click="finishDialog=true" v-if="this.$store.state.admin==3">卸货完成</el-button>
                         <el-dialog
@@ -74,7 +75,7 @@
                             width="30%">
                           
                             <el-button @click="finishComfirm()">确定</el-button>
-                            <el-button @click="cancle()">取消</el-button>
+                            <el-button @click="finishDialog=false">取消</el-button>
                         </el-dialog>
             </span>
         </div>
@@ -98,9 +99,7 @@
                         @change="importData"
                       >
                 </form>
-                    <div slot="footer" class="dialog-footer">
-                 
-                  </div>
+                   
                   
             </el-dialog>
 
@@ -187,8 +186,7 @@ export default {
                 location:'',
                 status:'',
             }],
-            excelFile:'',
-            formData:'',
+            
         }
     },
 
@@ -242,37 +240,63 @@ export default {
          importData(e){
               e.preventDefault();
               let that = this;
-              
-              
-              
-               let excelFile = e.target.files[0]; //取到上传的文件
-           let formData = new FormData(); //通过formdata上传
-             formData.append("items", excelFile);
-              axios({
-                method: "POST",
-                url: "api/api/v1/entry/" + this.id+'/items',
-                data: formData,
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  authorization: "Bearer "+ this.$store.state.token
-                }
-              })
+              let excelFile = e.target.files[0]; //取到上传的文件
+              let formData = new FormData(); //通过formdata上传
+                formData.append("items", excelFile);
+                  axios({
+                    method: "POST",
+                    url: "api/api/v1/entry/" + this.id+'/items',
+                    data: formData,
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                      authorization: "Bearer "+ this.$store.state.token
+                    }
+                  })
                 .then(function(res) {
                   console.log(res.data);
                   if (res.data == "Created") {
                   // that.$router.push({ path: "/" });
                   }
                   alert("成功");
-                  dialogFormVisible=false;
+
+                  //更新条目
+                  axios({
+                    method: "GET",
+                    url: "api/api/v1/entry/"+that.id,
+                    headers:{
+                        authorization: "Bearer "+ that.$store.state.token
+                    }
+                  })
+                  .then(function(response) {
+                    console.log(response.data);
+                    that.createdAt=response.data.createdAt;
+                    that.mobileTicket=response.data.mobileTicket;
+                    that.direction=response.data.direction;
+                    that.datetime=response.data.datetime;
+                    that.driverData[0].truckIndex=response.data.truckIndex;
+                    that.driverData[0].truckNum=response.data.truckNum;
+                    that.driverData[0].truckModel=response.data.truckModel;
+                    that.driverData[0].truckNo=response.data.truckNo;
+                    that.storeClerkData[0].unloadAt=response.data.unloadAt;
+                    that.storeClerkData[0].finishAt=response.data.finishAt;
+                    that.stocksData=response.data.items;
+                    
+                  })
+                  .catch(function(error) {
+                    
+                    alert(error);
+                    if(error =="Error: Request failed with status code 401")
+                      that.$router.push({ path: "/" });
+                    
+                  });
+
+                  
                 })
                 .catch(function(error) {
                   alert("添加失败");
                 })   
          },
-        
-             
-    },
-    unloadComfirm(){
+         unloadComfirm(){
         let that=this;
 
       axios({
@@ -319,11 +343,15 @@ export default {
         
       })  
     },
-    cancle(){
+    cancel(){
         that.unloadDialog=false
         that.finishDialog=false
     }
 
+        
+             
+    },
+    
     }
 
 

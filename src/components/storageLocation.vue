@@ -11,7 +11,7 @@
             >
             
              <el-table-column  type="expand"  >
-             <template slot-scope="row">
+             <template slot-scope="props">
                  
                 <el-table
                     :data="propsData"
@@ -19,7 +19,7 @@
                     border
                     style="width: 100%">
           
-                        <el-table-column label="托数" prop="storageNum" >
+                        <el-table-column label="托数" >{{props.row.trayNum}}
                            
                         </el-table-column>
                         <el-table-column label="物料编号" prop="serial">
@@ -81,7 +81,7 @@ export default {
             
             storageNum:'',
             propsData:[{
-                storageNum:'',
+                Num:'',
                 serial:'',
                 name:'',
                 count:'',
@@ -99,7 +99,7 @@ export default {
     
     mounted:function(){
       let that = this;
-      console.log(that.$store.state.token);
+      
       axios({
         method: "GET",
         url: "api/api/v1/location",
@@ -108,13 +108,14 @@ export default {
         }
      })
       .then(function(response) {
-        console.log(response.data);
+       
         that.storageLocationData=response.data;//库位号以及托数
+         
         
       })
       .catch(function(error) {
         console.log(error);
-         if(error==="Error: Request failed with status code 401")
+         if(error =="Error: Request failed with status code 401")
            that.$router.push({ path: "/" });
       });
 },
@@ -134,6 +135,7 @@ export default {
         
          for (var i = 0; i<row.trayNum; i=i+1) { 
                that.propsData[i]=i+1;
+               console.log(that.propsData[i]);
               
                
             }
