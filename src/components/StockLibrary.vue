@@ -55,7 +55,7 @@
 
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit">确定</el-button>
-                            <el-button @click="onCancel">取消</el-button>
+                            <el-button @click="dialogFormVisible=false">取消</el-button>
                         </el-form-item>
                 </el-form>
 
@@ -109,6 +109,7 @@
                     label="车次号"
                     width="60">          
             </el-table-column>
+           
             <el-table-column
                     prop="status"
                     label="状态"
@@ -119,9 +120,13 @@
                     <el-button type="primary" size="mini" @click="handleUpdate(row)">
                         Edit
                     </el-button>
-                    <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(row,'deleted')">
+                    <el-button  type="danger" @click.stop="deleteDialog=true">
                         Delete
                     </el-button>
+                    <el-dialog title="确定删除该入库批次？" :visible.sync="deleteDialog" style="text-align:center">
+                        <el-button @click.stop="deleteDialog = false">取 消</el-button>
+                        <el-button type="primary" @click="deleteMobileTicket(row)">确 定</el-button>
+                    </el-dialog>
                     </template>              
                 </el-table-column>   
             </template>
@@ -130,12 +135,14 @@
 </template>
 <script>
 import axios from 'axios'
+
 export default {
     data(){
         return{
             moveNumber:'',
             startDate:'',
             endDate:'',
+            deleteDialog:false,
             searchFormVisible:false,
             dialogFormVisible:false,
             form: {
@@ -181,45 +188,33 @@ export default {
         }
     },
      mounted:function(){
-      let that = this;
-     
-      axios({
-        method: "GET",
-        url: "api/api/v1/entry",
-        headers:{
-            authorization: "Bearer "+ that.$store.state.token
-        }
-     })
-      .then(function(response) {
-        console.log(response);
-        that.stocksBatch=response.data;//库位号以及托数
-        for(var i=0;i<that.stocksBatch.length;i++){
-            if(that.stocksBatch[i].status ==1)
-                that.stocksBatch[i].status="未开始"
-            else if(that.stocksBatch[i].status ==2)
-                that.stocksBatch[i].status="运输中"
-            else if(that.stocksBatch[i].status ==3)
-                that.stocksBatch[i].status="已到达"
-            else if(that.stocksBatch[i].status ==4)
-                that.stocksBatch[i].status="卸货中"
-            else if(that.stocksBatch[i].status ==5)
-                that.stocksBatch[i].status="入库完成"
+         var that=this;
+        that.mobileTicket();
 
-
-        }
-
-      
-      })
-      .catch(function(error) {
-        console.log(error);
-        alert(error);
-       if(error == "Error: Request failed with status code 401"){
-           that.$router.push({ path: "/" });
-       }
-
-      });
+         
+         
 },
     methods:{
+        deleteMobileTicket(row){
+            let that=this;
+            axios({
+                method: "DELETE",
+                url: "api/api/v1/entry/"+row.id,
+                headers:{
+                    authorization: "Bearer "+ that.$store.state.token
+                },
+            })
+            .then(function(response){
+                console.log(response);
+                that.mobileTicket();
+            })
+            .catch(function(error){
+                if(error =="Error: Request failed with status code 401")
+                    that.$router.push({ path: "/" });
+            })
+        
+
+        },
         stockTable(row){
             this.$router.push({ path: "/items/"+row.id });
         },
@@ -245,20 +240,18 @@ export default {
             .then(function(response) {
                alert("添加成功");
                that.form='';
+               that.mobileTicket();
                
                
             })
             .catch(function(error) {
                 alert("添加失败");
-                if(error==="Error: Request failed with status code 401")
+                if(error =="Error: Request failed with status code 401")
                     that.$router.push({ path: "/" });
                 
             });
     },
-    onCancel() {
-        this.dialogFormVisible=false
-      
-    },
+    
     searchStatus(e){
         let that = this;
         
@@ -302,10 +295,51 @@ export default {
            that.$router.push({ path: "/" });
      })
 
+    },
+    mobileTicket(){
+        
+     
+     var that=this;
+            axios({
+                method: "GET",
+                url: "api/api/v1/entry",
+                headers:{
+                    authorization: "Bearer "+ that.$store.state.token
+                }
+            })
+            .then(function(response) {
+                console.log(response);
+                that.stocksBatch=response.data;//库位号以及托数
+                for(var i=0;i<that.stocksBatch.length;i++){
+                    if(that.stocksBatch[i].status ==1)
+                        that.stocksBatch[i].status="未开始"
+                    else if(that.stocksBatch[i].status ==2)
+                        that.stocksBatch[i].status="运输中"
+                    else if(that.stocksBatch[i].status ==3)
+                        that.stocksBatch[i].status="已到达"
+                    else if(that.stocksBatch[i].status ==4)
+                        that.stocksBatch[i].status="卸货中"
+                    else if(that.stocksBatch[i].status ==5)
+                        that.stocksBatch[i].status="入库完成"
+
+
+                }
+
+            
+            })
+            .catch(function(error) {
+                console.log(error);
+                alert(error);
+                    if(error == "Error: Request failed with status code 401"){
+                        that.$router.push({ path: "/" });
+                    }
+
+            })
+            },
     }
     }
     
-}
+
 </script>
 <style>
 .el-input--small .el-input__inner {

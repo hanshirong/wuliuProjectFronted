@@ -56,6 +56,7 @@
                 label="托数">
             
             </el-table-column>
+            <!--
             <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
                 <el-button type="primary" size="mini">
@@ -66,7 +67,7 @@
                 </el-button>
                 </template>
                 
-            </el-table-column>
+            </el-table-column>-->
         </el-table>
        
     </div>
