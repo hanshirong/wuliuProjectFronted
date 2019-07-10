@@ -24,41 +24,31 @@
         style="margin-left: 10px;"
         type="primary"
         icon="el-icon-edit"
-        @click="dialogFormVisible =true"
+        @click="addFormVisible =true"
       >添加入库批次</el-button>
-      <el-dialog title="添加入库批次" :visible.sync="dialogFormVisible">
-        <el-form ref="form" :model="form" :rules="formRules" label-width="120px">
-          <el-form-item label="车次号" prop="truckIndex">
-            <el-input ref="truckIndex" v-model="form.truckIndex" />
-          </el-form-item>
-
-          <el-form-item label="移动时间" prop="datetime">
-            <el-col :span="11">
-              <el-date-picker
-                ref="date"
+     <el-dialog title="添加入库批次" :visible.sync="addFormVisible" >
+          <el-form :model="form">
+            <el-form-item label="车次号">
+                <el-input v-model="form.truckIndex"></el-input>
+            </el-form-item>
+            <el-date-picker label="移动时间"
                 v-model="form.datetime"
-                type="date"
-                placeholder="date"
-                style="width: 100%;"
-              />
-            </el-col>
-            <el-col :span="2" class="line">-</el-col>
-          </el-form-item>
-
-          <el-form-item label="移动单号" prop="mobileTicket">
-            <el-input ref="mobileTicket" v-model="form.mobileTicket" />
-          </el-form-item>
-
-          <el-form-item label="移动方向" prop="direction">
-            <el-input ref="direction" v-model="form.direction" />
-          </el-form-item>
-
-          <el-form-item>
+                type="datetime"
+                placeholder="选择日期时间">
+            </el-date-picker>
+            
+            <el-form-item label="移动单号">
+                <el-input v-model="form.mobileTicket"></el-input>
+            </el-form-item>
+            <el-form-item label="移动方向">
+                <el-input v-model="form.direction"></el-input>
+            </el-form-item>
+            </el-form>
             <el-button type="primary" @click="onSubmit">确定</el-button>
-            <el-button @click="dialogFormVisible=false">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
+            <el-button @click="cancel">取消</el-button>
+          
+        
+     </el-dialog>
     </div>
     <div
       class="search-container"
@@ -87,8 +77,8 @@
     </el-dialog>
 
     <el-table :data="stocksBatch" @row-click="stockTable" border style="width: 100%">
-      <template slot-scope="row">
-        {{row.$index}}
+     
+
         <el-table-column prop="mobileTicket" label="移动单号号" width="160"></el-table-column>
         <el-table-column prop="direction" label="移动方向" width="160"></el-table-column>
         <el-table-column prop="datetime" label="移动时间" width="180"></el-table-column>
@@ -98,14 +88,14 @@
         <el-table-column label="Actions" align="center" width="230">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
-            <el-button type="danger" @click.stop="deleteDialog=true">Delete</el-button>
-            <el-dialog title="确定删除该入库批次？" :visible.sync="deleteDialog" style="text-align:center">
+            <el-button type="danger" @click.stop="deleteDialog=true" >Delete</el-button>
+            <el-dialog title="确定删除该入库批次？" :visible.sync="deleteDialog" style="text-align:center" :show-close = false>
               <el-button @click.stop="deleteDialog = false">取 消</el-button>
-              <el-button type="primary" @click="deleteMobileTicket(row)">确 定</el-button>
+              <el-button type="primary" @click.stop="deleteMobileTicket(row)">确 定</el-button>
             </el-dialog>
           </template>
         </el-table-column>
-      </template>
+     
     </el-table>
   </div>
 </template>
@@ -120,12 +110,12 @@ export default {
       endDate: "",
       deleteDialog: false,
       searchFormVisible: false,
-      dialogFormVisible: false,
+      addFormVisible: false,
       form: {
-        truckIndex: "",
-        datetime: "",
-        mobileTicket: "",
-        direction: ""
+        truckIndex: '',
+        datetime: '',
+        mobileTicket: '',
+        direction: '',
       },
 
       formRules: {
@@ -180,6 +170,7 @@ export default {
   mounted: function() {
     var that = this;
     that.mobileTicket();
+     
   },
   methods: {
     deleteMobileTicket(row) {
@@ -190,12 +181,16 @@ export default {
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }
-      })
+        })
         .then(function(response) {
+            alert("删除成功");
           console.log(response);
           that.mobileTicket();
+          that.deleteDialog=false
         })
         .catch(function(error) {
+            alert(error);
+            that.mobileTicket();
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });
@@ -206,7 +201,7 @@ export default {
 
     onSubmit() {
       let that = this;
-
+        console.log('submit');
       axios({
         method: "POST",
         url: "api/api/v1/entry",
@@ -222,8 +217,9 @@ export default {
       })
         .then(function(response) {
           alert("添加成功");
-          that.form = "";
+          that.form={};
           that.mobileTicket();
+          that.addFormVisible=false;
         })
         .catch(function(error) {
           alert("添加失败");
@@ -302,7 +298,12 @@ export default {
             that.$router.push({ path: "/" });
           }
         });
-    }
+    },
+    cancel(){
+        this.form='',
+        this.dialogFormVisible=false;
+    },
+    
   }
 };
 </script>

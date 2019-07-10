@@ -64,13 +64,13 @@ export default {
     };
   },
   mounted(){
-        if (this.form.truckIndex === ''){
+        if (this.form.truckIndex == ''){
             this.$refs.truckIndex.focus()
-        } else if(this.form.datetime === ''){
+        } else if(this.form.datetime == ''){
             this.$refs.datetime.focus()
-        } else if(this.form.mobileTicket === ''){
+        } else if(this.form.mobileTicket == ''){
             this.$refs.mobileTicket.focus()
-        } else if(this.form.direction === ''){
+        } else if(this.form.direction == ''){
             this.$refs.direction.focus()
         } 
     },

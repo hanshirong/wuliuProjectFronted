@@ -88,7 +88,7 @@
       <el-table :data="stocksData" border width="100%">
         <el-table-column prop="serial" label="物料编号" width="100"></el-table-column>
         <el-table-column prop="name" label="物料名称" width="180"></el-table-column>
-        <el-table-column prop="ticket" label="现品票号" width="100"></el-table-column>
+        <el-table-column prop="ticket" label="现品票号" width="180"></el-table-column>
         <el-table-column prop="count" label="数量" width="50"></el-table-column>
         <el-table-column prop="location" label="库位号" width="80"></el-table-column>
         <el-table-column prop="trayIndex" label="托号" width="50"></el-table-column>
@@ -179,23 +179,8 @@ export default {
             // that.$router.push({ path: "/" });
           }
           alert("成功");
-
-          //更新条目
-          axios({
-            method: "GET",
-            url: "api/api/v1/entry/" + that.id,
-            headers: {
-              authorization: "Bearer " + that.$store.state.token
-            }
-          })
-            .then(function(response) {
-              console.log(response.data);
-            })
-            .catch(function(error) {
-              alert(error);
-              if (error == "Error: Request failed with status code 401")
-                that.$router.push({ path: "/" });
-            });
+          that.stocks();
+          
         })
         .catch(function(error) {
           alert("添加失败");
