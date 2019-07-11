@@ -259,8 +259,10 @@ export default {
           that.driverData[0].truckNum = response.data.truckNum;
           that.driverData[0].truckModel = response.data.truckModel;
           that.driverData[0].truckNo = response.data.truckNo;
-          that.storeClerkData[0].unloadAt = that.changeDate(response.data.unloadAt);
-          that.storeClerkData[0].finishAt = that.changeDate(response.data.finishAt);
+          if(response.data.unloadAt != null)
+            that.storeClerkData[0].unloadAt = that.changeDate(response.data.unloadAt);
+          if(response.data.finishAt != null)
+            that.storeClerkData[0].finishAt = that.changeDate(response.data.finishAt);
           that.stocksData = response.data.items;
           if (response.data.unloadAt == null) that.start = 1;
           if (response.data.finishAt == null) that.end = 1;
