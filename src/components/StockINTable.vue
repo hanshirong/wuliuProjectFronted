@@ -251,16 +251,16 @@ export default {
       })
         .then(function(response) {
           console.log(response.data);
-          that.createdAt = response.data.createdAt;
+          that.createdAt = that.changeDate(response.data.createdAt);
           that.mobileTicket = response.data.mobileTicket;
           that.direction = response.data.direction;
-          that.datetime = response.data.datetime;
+          that.datetime = that.changeDate(response.data.datetime);
           that.driverData[0].truckIndex = response.data.truckIndex;
           that.driverData[0].truckNum = response.data.truckNum;
           that.driverData[0].truckModel = response.data.truckModel;
           that.driverData[0].truckNo = response.data.truckNo;
-          that.storeClerkData[0].unloadAt = response.data.unloadAt;
-          that.storeClerkData[0].finishAt = response.data.finishAt;
+          that.storeClerkData[0].unloadAt = that.changeDate(response.data.unloadAt);
+          that.storeClerkData[0].finishAt = that.changeDate(response.data.finishAt);
           that.stocksData = response.data.items;
           if (response.data.unloadAt == null) that.start = 1;
           if (response.data.finishAt == null) that.end = 1;

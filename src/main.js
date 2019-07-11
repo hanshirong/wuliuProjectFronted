@@ -17,6 +17,12 @@ Vue.use(ElementUI,{size:'small',zIndex:3000});
 Vue.config.productionTip = false
 Vue.prototype.$api=Api;
 
+Vue.prototype.changeDate=function(e){
+      
+  return e.replace(/T/g,' ').replace(/Z/g,' ')
+ // console.log(e.replace(/T/g,' ').replace(/Z/g,' '))
+}
+
 Vue.filter('OnStatus',function(value){
   if(value=='1')
   {

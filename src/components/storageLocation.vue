@@ -26,8 +26,11 @@
                                 
                             </el-table-column>
                             <el-table-column label="入库时间" prop="finishAt">
-                            
+                              
+
                             </el-table-column>
+                            
+
                             <el-table-column label="移动单号" prop="mobileTicket">
                             
                             </el-table-column>
@@ -130,12 +133,13 @@ export default {
                // console.log(row.trayNum);
                 that.$set(that.propsData[index],i-1,{ Num:"托"+i});
             for(var j=0;j<response.data.packs.length;j=j+1){
+             
               if(response.data.packs[j].items==''){
                   that.$set(that.propsData[index],j,{ 
                   Num:"托"+j,
                   serial:response.data.packs[j].serial,
                   count:response.data.packs[j].count,
-                  finishAt:response.data.packs[j].entry.finishAt,
+                  finishAt:that.changeDate(response.data.packs[j].entry.finishAt),
                   mobileTicket:response.data.packs[j].entry.mobileTicket,
                   direction:response.data.packs[j].entry.direction,
                   name:''
@@ -145,7 +149,7 @@ export default {
                   Num:"托"+j,
                   serial:response.data.packs[j].serial,
                   count:response.data.packs[j].count,
-                  finishAt:response.data.packs[j].entry.finishAt,
+                  finishAt:that.changeDate(response.data.packs[j].entry.finishAt),
                   mobileTicket:response.data.packs[j].entry.mobileTicket,
                   direction:response.data.packs[j].entry.direction,
                   name:response.data.packs[j].items[0].name
@@ -180,6 +184,7 @@ export default {
        //获取每行索引
         row.index = rowIndex;
     },
+   
   }
 };
 </script>

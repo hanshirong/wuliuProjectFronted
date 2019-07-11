@@ -278,7 +278,7 @@ export default {
       })
         .then(function(response) {
           console.log(response);
-          that.stocksBatch = response.data; //库位号以及托数
+          that.stocksBatch = response.data; 
           for (var i = 0; i < that.stocksBatch.length; i++) {
             if (that.stocksBatch[i].status == 1)
               that.stocksBatch[i].status = "未开始";
@@ -290,6 +290,7 @@ export default {
               that.stocksBatch[i].status = "卸货中";
             else if (that.stocksBatch[i].status == 5)
               that.stocksBatch[i].status = "入库完成";
+           that.stocksBatch[i].datetime= that.changeDate(that.stocksBatch[i].datetime);
           }
         })
         .catch(function(error) {
