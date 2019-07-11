@@ -1,5 +1,6 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" >
+     <myheader></myheader>
     <div class="search-container" v-if="this.$store.state.admin==2">
       <!--搜索-->
       <el-input v-model="moveNumber" placeholder="请输入移动单号" style="width:150px;size:6px" />
@@ -21,10 +22,11 @@
 
       <el-button
         class="filter-item"
-        style="margin-left: 10px;"
+        style="margin-left: 10px;cursor:pointer"
         type="primary"
         icon="el-icon-edit"
         @click="addFormVisible =true"
+
       >添加入库批次</el-button>
      <el-dialog title="添加入库批次" :visible.sync="addFormVisible" >
           <el-form :model="form">
@@ -44,8 +46,8 @@
                 <el-input v-model="form.direction"></el-input>
             </el-form-item>
             </el-form>
-            <el-button type="primary" @click="onSubmit">确定</el-button>
-            <el-button @click="cancel">取消</el-button>
+            <el-button type="primary" @click="onSubmit" style="cursor:pointer">确定</el-button>
+            <el-button @click="cancel" style="cursor:pointer">取消</el-button>
           
         
      </el-dialog>
@@ -53,8 +55,9 @@
     <div
       class="search-container"
       v-if="this.$store.state.admin==3"
-      style="text-align:right;margin-right:20px;"
+      style="text-align:right;margin-right:20px; cursor:pointer"
       @click="searchFormVisible =true"
+      
     >
       搜索
       <img src="/static/images/search.png" />
@@ -71,12 +74,12 @@
         ></el-date-picker>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="searchFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="searchFormVisible = false">确 定</el-button>
+        <el-button @click="searchFormVisible = false" style="cursor:pointer">取 消</el-button>
+        <el-button type="primary" @click="searchFormVisible = false" style="cursor:pointer">确 定</el-button>
       </span>
     </el-dialog>
 
-    <el-table :data="stocksBatch" @row-click="stockTable" border style="width: 100%">
+    <el-table :data="stocksBatch" @row-click="stockTable" border style="width: 100% cursor:pointer">
      
 
         <el-table-column prop="mobileTicket" label="移动单号号" width="160"></el-table-column>
@@ -88,10 +91,11 @@
         <el-table-column label="Actions" align="center" width="230">
           <template slot-scope="{row}">
            <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>-->
-            <el-button type="danger" @click.stop="deleteDialog=true" >Delete</el-button>
+            <el-button type="danger" @click.stop="deleteStatus(row)" style="cursor:pointer">Delete</el-button>
             <el-dialog title="确定删除该入库批次？" :visible.sync="deleteDialog" style="text-align:center" :show-close = false>
-              <el-button @click.stop="deleteDialog = false">取 消</el-button>
-              <el-button type="primary" @click.stop="deleteMobileTicket(row)">确 定</el-button>
+             
+              <el-button @click.stop="deleteDialog = false" style="cursor:pointer">取 消</el-button>
+              <el-button type="primary" @click.stop="deleteMobileTicket(deleteIndex)" style="cursor:pointer">确 定</el-button>
             </el-dialog>
           </template>
         </el-table-column>
@@ -111,6 +115,7 @@ export default {
       deleteDialog: false,
       searchFormVisible: false,
       addFormVisible: false,
+      deleteIndex:0,
       form: {
         truckIndex: '',
         datetime: '',
@@ -177,19 +182,28 @@ export default {
       let that = this;
       axios({
         method: "DELETE",
-        url: "api/api/v1/entry/" + row.id,
+        url: "/api/v1/entry/" + row,
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }
         })
         .then(function(response) {
-            alert("删除成功");
+            that.$ftoast({
+            text: '删除成功',        
+            textColor: 'black',
+            toastBackground: '#66ff99'
+          })
           console.log(response);
           that.mobileTicket();
           that.deleteDialog=false
         })
         .catch(function(error) {
-            alert(error);
+             that.$ftoast({
+            text: '删除失败',
+            
+            textColor: 'black',
+            toastBackground: '#ff0000'
+          })
             that.mobileTicket();
             that.deleteDialog=false
           if (error == "Error: Request failed with status code 401")
@@ -205,7 +219,7 @@ export default {
         console.log('submit');
       axios({
         method: "POST",
-        url: "api/api/v1/entry",
+        url: "/api/v1/entry",
         headers: {
           authorization: "Bearer " + that.$store.state.token
         },
@@ -217,13 +231,21 @@ export default {
         }
       })
         .then(function(response) {
-          alert("添加成功");
+          that.$ftoast({
+            text: '添加成功',
+            textColor: 'black',
+            toastBackground: '#66ff99'
+          })
           that.form={};
           that.mobileTicket();
           that.addFormVisible=false;
         })
         .catch(function(error) {
-          alert("添加失败");
+           that.$ftoast({
+            text: '添加失败',        
+            textColor: 'black',
+            toastBackground: '#ff0000'
+          })
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });
@@ -240,7 +262,7 @@ export default {
 
       axios({
         method: "GET",
-        url: "api/api/v1/entry/?status=" + that.status,
+        url: "/api/v1/entry/?status=" + that.status,
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }
@@ -262,8 +284,8 @@ export default {
         })
 
         .catch(function(error) {
-          alert(error);
-          if (error === "Error: Request failed with status code 401")
+
+          if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });
     },
@@ -271,7 +293,7 @@ export default {
       var that = this;
       axios({
         method: "GET",
-        url: "api/api/v1/entry",
+        url: "api/v1/entry",
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }
@@ -295,7 +317,7 @@ export default {
         })
         .catch(function(error) {
           console.log(error);
-          alert(error);
+         
           if (error == "Error: Request failed with status code 401") {
             that.$router.push({ path: "/" });
           }
@@ -305,6 +327,10 @@ export default {
         this.form='',
         this.dialogFormVisible=false;
     },
+    deleteStatus(row){
+      this.deleteDialog=true;
+      this.deleteIndex=row.id;
+    }
     
   }
 };

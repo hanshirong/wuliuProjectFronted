@@ -10,10 +10,11 @@ import Api from './api/index';
 import store from './store';
 import Blob from './excel/Blob.js'
 import Export2Excel from './excel/Export2Excel.js'
-
-
+import header from './components/header.vue'
+import myToast from 'easytoast-f-vue'
+Vue.component("myheader",header);
 Vue.use(ElementUI,{size:'small',zIndex:3000});
-
+Vue.use(myToast);
 Vue.config.productionTip = false
 Vue.prototype.$api=Api;
 

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+     <myheader></myheader>
     <div class="mobileInfo">
       <p>时间: {{createdAt}}</p>
       <p>移动单号：{{mobileTicket}}</p>
@@ -42,26 +43,27 @@
         <el-button @click="finishDialog=true" v-if="this.end==1">卸货完成</el-button>
         <span v-if="this.end==0">{{this.storeClerkData[0].finishAt}}</span>
         <el-dialog title="确认卸货完成？" :visible.sync="finishDialog" width="30%">
-          <el-button @click="finishComfirm()">确定</el-button>
-          <el-button @click="finishDialog=false">取消</el-button>
+           <el-button @click="finishDialog=false">取消</el-button>
+          <el-button @click="finishComfirm()" type="primary">确定</el-button>
+         
         </el-dialog>
       </span>
     </div>
     <!--添加入库条目-->
     <div class="stocks">
-      <p @click="dialogFormVisible=true" v-if="this.$store.state.admin==2">
+      <p @click="dialogFormVisible=true" v-if="this.$store.state.admin==2" style="cursor:pointer">
         添加入库条目
         <img src="/static/images/pen.png" />
       </p>
       <span v-if="this.$store.state.admin==3">
         入库条目
-        <button @click="scan()">扫描</button>
+        <button @click="scan()" style="cursor:pointer">扫描</button>
       </span>
       <span v-if="this.$store.state.admin==3">
-        <button @click="allotDialog=true">分配库位</button>
+        <button @click="allotDialog=true" style="cursor:pointer">分配库位</button>
         <el-dialog title="确认分配库位？" :visible.sync="allotDialog" width="30%">
-          <el-button @click="allotComfirm()">确定</el-button>
-          <el-button @click="allotDialog=false">取消</el-button>
+          <el-button @click="allotComfirm()" style="cursor:pointer">确定</el-button>
+          <el-button @click="allotDialog=false" style="cursor:pointer">取消</el-button>
         </el-dialog>
       </span>
 
@@ -166,7 +168,7 @@ export default {
       formData.append("items", excelFile);
       axios({
         method: "POST",
-        url: "api/api/v1/entry/" + this.id + "/items",
+        url: "/api/v1/entry/" + this.id + "/items",
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -178,12 +180,23 @@ export default {
           if (res.data == "Created") {
             // that.$router.push({ path: "/" });
           }
-          alert("成功");
+         
+           that.$ftoast({
+            text: '添加成功',
+            textColor: 'black',
+            toastBackground: '#66ff99'
+          })
+          that.dialogFormVisible=false
           that.stocks();
           
         })
         .catch(function(error) {
-          alert("添加失败");
+         
+           that.$ftoast({
+            text: '添加失败',
+            textColor: 'black',
+            toastBackground: '#FF0000'
+          })
         });
     },
     //卸货开始
@@ -192,7 +205,7 @@ export default {
 
       axios({
         method: "PUT",
-        url: "api/api/v1/entry/" + that.id + "/status",
+        url: "/api/v1/entry/" + that.id + "/status",
         data: {
           status: 4
         },
@@ -216,7 +229,7 @@ export default {
       let that = this;
       axios({
         method: "PUT",
-        url: "api/api/v1/entry/" + that.id + "/status",
+        url: "/api/v1/entry/" + that.id + "/status",
         data: {
           status: 5
         },
@@ -225,14 +238,14 @@ export default {
         }
       })
         .then(function(response) {
-          console.log("finish");
+         
           that.end=0;
           that.finishDialog = false;
           that.stocks();
         })
         .catch(function(error) {
           that.finishDialog = false;
-          alert(error);
+          
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });
@@ -244,7 +257,7 @@ export default {
       console.log(that.id);
       axios({
         method: "GET",
-        url: "api/api/v1/entry/" + that.id,
+        url: "/api/v1/entry/" + that.id,
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }
@@ -279,7 +292,7 @@ export default {
           }
         })
         .catch(function(error) {
-          alert(error);
+         
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });
@@ -290,7 +303,7 @@ export default {
       that.id = that.$route.params.id;
       axios({
         method: "POST",
-        url: "api/api/v1/entry/" + that.id + "/allot",
+        url: "/api/v1/entry/" + that.id + "/allot",
 
         headers: {
           authorization: "Bearer " + that.$store.state.token
@@ -298,13 +311,22 @@ export default {
       })
         .then(function(response) {
           console.log("allotfinish");
-          alert("分配完成");
+          
+           that.$ftoast({
+            text: '分配完成',         
+            textColor: 'black',
+            toastBackground: '#66ff99'
+          })
           that.allotDialog = false;
           that.stocks();
         })
         .catch(function(error) {
           that.allotDialog = false;
-          alert(error);
+           that.$ftoast({
+            text: '分配失败',
+            textColor: 'black',
+            toastBackground: '#ff0000'
+          })
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });

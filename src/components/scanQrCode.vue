@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="error">{{ error }}</p>
-
+    
+     <myheader></myheader>
     <el-table :data="scanData" border style="width:100%;margin:50px;">
       <el-table-column prop="serial" label="物料编号" width="180"></el-table-column>
       <el-table-column prop="ticket" label="现品票号" width="180"></el-table-column>
@@ -9,7 +9,7 @@
     </el-table>
 
     <!--ADD-->
-    <el-button @click="addDialog=true">ADD</el-button>
+    <el-button @click="addDialog=true" style="cursor:pointer">ADD</el-button>
     <el-dialog title="添加" :visible.sync="addDialog" width="30%">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="物料编号" prop="serial">
@@ -22,10 +22,10 @@
           <el-input ref="count" v-model="form.count" />
         </el-form-item>
       </el-form>
-      <el-button @click="submit">确定</el-button>
+      <el-button @click="submit" style="cursor:pointer">确定</el-button>
     </el-dialog>
     <qrcode-stream @decode="onDecode" @init="onInit" />
-    <button @click="update">提交</button>
+    <button @click="update" style="cursor:pointer">提交</button>
   </div>
 </template>
 
@@ -84,7 +84,7 @@ export default {
       console.log(that.id);
       axios({
         method: "POST",
-        url: "api/api/entry/" + that.id + "/items/confirm",
+        url: "/api/v1/entry/" + that.id + "/items/confirm",
         headers: {
           authorization: "Bearer " + that.$store.state.token
         },
@@ -92,11 +92,16 @@ export default {
           items: that.scanData
         }
       }).then(function(response) {
-        alert("添加成功");
+       
+         that.$ftoast({
+            text: '添加成功',           
+            textColor: 'black',
+            toastBackground: '#66ff99'
+          })
       });
       axios({
         method: "GET",
-        url: "api/api/v1/entry/" + that.id,
+        url: "/api/v1/entry/" + that.id,
         headers: {
           authorization: "Bearer " + that.$store.state.token
         }

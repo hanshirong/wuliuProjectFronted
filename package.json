@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "easytoast-f-vue": "^1.0.5",
     "element-ui": "^2.10.0",
     "file-saver": "^2.0.2",
     "svg-sprite-loader": "^4.1.6",

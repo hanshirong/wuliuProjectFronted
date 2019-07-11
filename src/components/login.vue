@@ -1,5 +1,6 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" style="cursor:pointer">
+    
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -8,10 +9,10 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title" style="cursor:pointer">Login Form</h3>
       </div>
       <el-form-item prop="username">
-        <span class="svg-container">
+        <span class="svg-container" >
           <img src="/static/images/user.png" />
         </span>
         <el-input
@@ -21,6 +22,7 @@
           name="username"
           type="text"
           tabindex="1"
+          style="cursor:pointer"
         ></el-input>
       </el-form-item>
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
@@ -39,6 +41,7 @@
             @keyup.native="checkCapslock"
             @blur="capsTooltip=false"
             @keyup.enter.native="handleLogin"
+            
           ></el-input>
           <span class="show-pwd" @click="showPwd">
             <img v-if="passwordType === 'password' " src="/static/images/eye.png" />
@@ -49,8 +52,9 @@
       <el-button
         :loading="loading"
         type="primary"
-        style="width:95%;margin-top:30px;font-size:32px;margin-left:10px;"
+        style="width:95%;margin-top:30px;font-size:32px;margin-left:10px;cursor:pointer"
         @click.native.prevent="handleLogin"
+        
       >Login</el-button>
     </el-form>
   </div>
@@ -125,7 +129,7 @@ export default {
       let that = this;
       axios({
         method: "POST",
-        url: "api/api/v1/auth/signin",
+        url: "/api/v1/auth/signin",
         data: {
           username: that.loginForm.username,
           password: that.loginForm.password
@@ -135,7 +139,7 @@ export default {
           that.$store.dispatch("getNewToken", response.data.token);
           axios({
             method: "GET",
-            url: "api/api/v1/auth/me",
+            url: "/api/v1/auth/me",
             headers: {
               authorization: "Bearer " + that.$store.state.token
             }
