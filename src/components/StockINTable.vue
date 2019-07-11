@@ -202,7 +202,7 @@ export default {
       })
         .then(function(response) {
           console.log(response);
-
+          that.start=0;
           that.unloadDialog = false;
           that.stocks();
         })
@@ -226,7 +226,7 @@ export default {
       })
         .then(function(response) {
           console.log("finish");
-
+          that.end=0;
           that.finishDialog = false;
           that.stocks();
         })

@@ -87,7 +87,7 @@
         <el-table-column prop="status" label="状态" width="100"></el-table-column>
         <el-table-column label="Actions" align="center" width="230">
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
+           <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>-->
             <el-button type="danger" @click.stop="deleteDialog=true" >Delete</el-button>
             <el-dialog title="确定删除该入库批次？" :visible.sync="deleteDialog" style="text-align:center" :show-close = false>
               <el-button @click.stop="deleteDialog = false">取 消</el-button>
@@ -191,6 +191,7 @@ export default {
         .catch(function(error) {
             alert(error);
             that.mobileTicket();
+            that.deleteDialog=false
           if (error == "Error: Request failed with status code 401")
             that.$router.push({ path: "/" });
         });

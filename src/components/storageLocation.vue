@@ -25,7 +25,7 @@
                             <el-table-column label="核定数" prop="count">
                                 
                             </el-table-column>
-                            <el-table-column label="入库时间" prop="entryAt">
+                            <el-table-column label="入库时间" prop="finishAt">
                             
                             </el-table-column>
                             <el-table-column label="移动单号" prop="mobileTicket">
@@ -70,7 +70,7 @@ export default {
           serial: "",
           name: "",
           count: "",
-          entryAt: "",
+          finishAt: "",
           mobileTicket: "",
           direction: ""
         },]
@@ -116,18 +116,7 @@ export default {
     },
     handleUpdate(row) {
       let that = this;
-      var index=row.index;
-      
-      that.$set(that.propsData,index,[{Num:"托index"}]);
-      
-     
-
-      
-        for(var i=1;i<=row.trayNum;i=i+1){
-            that.$set(that.propsData[index],i-1,{ Num:"托"+i,});
-        }
-         console.log(that.propsData[index]);
-        
+      var index=row.index; 
       axios({
         method: "GET",
         url: "api/api/v1/location/" + row.id,
@@ -136,9 +125,50 @@ export default {
         }
       })
         .then(function(response) {
-          console.log(response);
+        that.$set(that.propsData,index,[{Num:"托index",serial:''}]);
+      for(var i=1;i<=row.trayNum;i=i+1){
+               // console.log(row.trayNum);
+                that.$set(that.propsData[index],i-1,{ Num:"托"+i});
+            for(var j=0;j<response.data.packs.length;j=j+1){
+              if(response.data.packs[j].items==''){
+                  that.$set(that.propsData[index],j,{ 
+                  Num:"托"+j,
+                  serial:response.data.packs[j].serial,
+                  count:response.data.packs[j].count,
+                  finishAt:response.data.packs[j].entry.finishAt,
+                  mobileTicket:response.data.packs[j].entry.mobileTicket,
+                  direction:response.data.packs[j].entry.direction,
+                  name:''
+              });
+              } else{
+                  that.$set(that.propsData[index],j,{ 
+                  Num:"托"+j,
+                  serial:response.data.packs[j].serial,
+                  count:response.data.packs[j].count,
+                  finishAt:response.data.packs[j].entry.finishAt,
+                  mobileTicket:response.data.packs[j].entry.mobileTicket,
+                  direction:response.data.packs[j].entry.direction,
+                  name:response.data.packs[j].items[0].name
+              });
+              }
+                
 
-          that.propsData[index] = response.data.packs;
+                //console.log("名字为空");
+            
+            
+            
+           // that.propsData[index][i].serial=response.data.packs[i].serial;
+              //console.log("yyy"+that.propsData[index][i].serial);
+              //console.log(i);
+        }
+
+      }
+          
+          //that.propsData[index] = response.data.packs;
+         // that.propsData[index].finishAt=response.data.packs.entry;
+        // console.log(that.propsData[index]);
+          
+        // console.log(that.propsData[index]);
         })
         .catch(function(error) {
           alert(error);
