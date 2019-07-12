@@ -1,15 +1,17 @@
 <template>
   <div>
     
-     <myheader></myheader>
+    <div class="table">
     <el-table :data="scanData" border style="width:100%;margin:50px;">
       <el-table-column prop="serial" label="物料编号" width="180"></el-table-column>
       <el-table-column prop="ticket" label="现品票号" width="180"></el-table-column>
       <el-table-column prop="count" label="数量"></el-table-column>
     </el-table>
+    </div>
 
     <!--ADD-->
-    <el-button @click="addDialog=true" style="cursor:pointer">ADD</el-button>
+
+    <el-button @click="addDialog=true" style="cursor:pointer" class="add">ADD</el-button>
     <el-dialog title="添加" :visible.sync="addDialog" width="30%">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="物料编号" prop="serial">
@@ -25,7 +27,7 @@
       <el-button @click="submit" style="cursor:pointer">确定</el-button>
     </el-dialog>
     <qrcode-stream @decode="onDecode" @init="onInit" />
-    <button @click="update" style="cursor:pointer">提交</button>
+    <button @click="update" style="cursor:pointer" class="submitScan">提交</button>
   </div>
 </template>
 
