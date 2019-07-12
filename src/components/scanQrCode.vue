@@ -1,17 +1,18 @@
 <template>
-  <div>
-    
-    <div class="table">
-    <el-table :data="scanData" border style="width:100%;margin:50px;">
-      <el-table-column prop="serial" label="物料编号" width="180"></el-table-column>
-      <el-table-column prop="ticket" label="现品票号" width="180"></el-table-column>
-      <el-table-column prop="count" label="数量"></el-table-column>
-    </el-table>
+  <div class="app-container">
+    <div class="header">
+    <div class="fronted"> ⬅</div>
+    <div>
+     <button @click="update" style="cursor:pointer" class="submitScan">提交</button>
+
     </div>
+     
+    </div>
+
 
     <!--ADD-->
 
-    <el-button @click="addDialog=true" style="cursor:pointer" class="add">ADD</el-button>
+    
     <el-dialog title="添加" :visible.sync="addDialog" width="30%">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="物料编号" prop="serial">
@@ -26,8 +27,17 @@
       </el-form>
       <el-button @click="submit" style="cursor:pointer">确定</el-button>
     </el-dialog>
-    <qrcode-stream @decode="onDecode" @init="onInit" />
-    <button @click="update" style="cursor:pointer" class="submitScan">提交</button>
+    <qrcode-stream @decode="onDecode" @init="onInit"  class="scanClass"/>
+        <div class="table">
+    <el-table :data="scanData" border style="width:100%;margin:50px;">
+      <el-table-column prop="serial" label="物料编号" width="180"></el-table-column>
+      <el-table-column prop="ticket" label="现品票号" width="180"></el-table-column>
+      <el-table-column prop="count" label="数量"></el-table-column>
+    </el-table>
+    
+    </div>
+    <img src="/static/images/add.png" @click="addDialog=true" style="cursor:pointer" class="add" />
+   
   </div>
 </template>
 
@@ -72,6 +82,7 @@ export default {
       });
 
       this.i = this.i + 1;
+      this.form={}
     },
 
     mounted: function() {
@@ -151,8 +162,29 @@ export default {
 </script>
 
 <style scoped>
+
+.header{
+  display: flex;
+  flex-flow:  row nowrap;
+  justify-content: space-between;
+  height: 40px;
+
+}
 .error {
   font-weight: bold;
   color: red;
+}
+.add{
+  float:right;
+  margin-right:20px;
+
+  
+}
+.scanClass{
+ 
+  height:300px;
+  width:40%;
+  overflow: hidden;
+  margin-left:30%;
 }
 </style>
