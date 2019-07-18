@@ -11,11 +11,12 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "easytoast-f-vue": "^1.0.5",
     "element-ui": "^2.10.0",
     "file-saver": "^2.0.2",
+    "mint-ui": "^2.2.13",
     "svg-sprite-loader": "^4.1.6",
     "vue": "^2.5.2",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-qrcode-reader": "^2.0.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.1.1",
