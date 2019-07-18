@@ -13,6 +13,7 @@ export default new Router({
       path: '/',
       name: 'login',
       component: () => import('@/components/login'),//Login
+      
     },
     {
       path:'/login',
