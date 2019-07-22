@@ -14,7 +14,7 @@
         <el-col :span="11">
           <el-date-picker
             ref="date"
-            v-model="form.datetime"
+            v-model="form.datetime" 
             type="date"
             placeholder="date"
             style="width: 100%;"
