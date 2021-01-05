@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "easytoast-f-vue": "^1.0.5",
     "element-ui": "^2.10.0",
     "file-saver": "^2.0.2",
